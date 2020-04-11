@@ -5,6 +5,7 @@ import 'dart:collection';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import './banner.dart' as cBanner;
 import '../../utils/custom_cursor.dart';
 
@@ -16,6 +17,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _current = 0;
   var top = 0.0;
+  var topFakeBanner = 0.0;
   var height = 0.0;
   var width = 0.0;
   bool isFirstTime = true;
@@ -45,13 +47,11 @@ class _HomeState extends State<Home> {
     "پشتیبانی 24 ساعته",
     "سرویس های صوتی و چند رسانه ای",
     "توسعه محصول",
-    "",
   ];
   final List<String> serviceContent = [
     "ما در وسفا معتقدیم پشتیبانی از یک محصول اگر از فرایند تولید آن مهم‌تر نباشد، قطعا به اندازه ی تولید اهمیت دارد. محصولی محبوب و فراگیر خواهد بود که پشتیبان قوی داشته باشد. تیم پشتیبانی وسفا هفت روز هفته و به صورت شبانه روزی (24ساعته) تمامی محصولات خود را پشتیبانی نموده و همواره سلامت عملکرد سرویس های خود را پایش می کند. همچنین همکاران و مشترکان می توانند از طریق ایمیل support@vasfa.ir نیز ایرادات احتمالی را به تیم گزارش نمایند یا با تلفن های شرکت تماس بگیرند",
     "یکی از پر مخاطب ترین محتواهایی که امروزه در حوزه سرویسهای ارزش افزوده (VAS) مورد توجه واقع شده، محتواهای مالتی‌مدیا (چند رسانه‌ای) می‌باشد. شرکت وسفاسیارهوشمند با کادر فنی و تامین محتوای مجرب خود، خدماتی از قبیل سرویس‌های مشاوره، فرهنگی، آموزشی، اطلاع رسانی، مذهبی و … را به صورت مالتی‌مدیا (چندرسانه‌ای) و صوتی بر بستر سرویس‌های ارزش افزوده ارائه می‌دهد. جهت اطلاعات بیشتر با کارشناسان ما تماس بگیرید",
     "گر ایده جدیدی در ذهن دارید یا محصولی دارید که میخواهید درآمدی چندین و چند برابری داشته باشد، می توانید روی تیم وسفا حساب کنید. ما با تیم توانمند خود در حوزه طراحی تجربه کاربری (UX) و رابط کاربری (UI) ، تامین محتوا و بازاریابی، ایده یا محصول شما را برای رسیدن به درآمدی بهینه و مطلوب همراهی می کنیم. همین الان با ما تماس بگیرید:",
-    "",
   ];
 
   void startTimer() {
@@ -104,19 +104,25 @@ class _HomeState extends State<Home> {
       height = MediaQuery.of(context).size.height;
       width = MediaQuery.of(context).size.width;
       newAspectRatioHeight = (1275 / 1920) * width;
-      width < 500 ? rowCount = 1 : width < 1100 ? rowCount = 2 : rowCount = 3;
+      width < 500 ? rowCount = 1 : width < 992 ? rowCount = 1 : rowCount = 3;
       startTimer();
     }
   }
 
   void scrollTo() {
-    var currentH = width > 1100 ? height - 120 : newAspectRatioHeight;
+    var currentH = width > 1100
+        ? height - 120
+        : width > 700 ? newAspectRatioHeight - 120 : newAspectRatioHeight;
     _scrollController.animateTo(currentH,
         duration: new Duration(milliseconds: 1500), curve: Curves.ease);
   }
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.red,
+      statusBarBrightness: Brightness.dark,
+    ));
     return Scaffold(
       drawer: width < 700
           ? Drawer(
@@ -125,14 +131,20 @@ class _HomeState extends State<Home> {
               ),
             )
           : null,
-      appBar: width < 700 ? AppBar() : null,
+      appBar: width < 700
+          ? AppBar(
+              backgroundColor: Colors.redAccent,
+              brightness: Brightness.dark,
+            )
+          : null,
       body: NotificationListener(
         // ignore: missing_return
         onNotification: (notification) {
           if (notification is ScrollUpdateNotification) {
-            if (width > 700) {
+            if (width > 100) {
               setState(() {
                 top -= notification.scrollDelta / 5;
+                topFakeBanner -= notification.scrollDelta;
                 if (top > -3.0) {
                   isScroll = false;
                   heightContainer = 150;
@@ -147,6 +159,7 @@ class _HomeState extends State<Home> {
         child: Stack(
           children: <Widget>[
             width > 100 ? mainBanner() : Container(),
+            fakeBanner(),
             mainContentCustomScrollView(),
             width > 700 ? header() : Container(),
           ],
@@ -353,6 +366,20 @@ class _HomeState extends State<Home> {
     );
   }
 
+  Widget fakeBanner() {
+    return Positioned(
+      top: (width > 1100 ? height : newAspectRatioHeight) + topFakeBanner,
+      left: 0,
+      right: 0,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: 3000),
+        child: Container(
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
   Widget mainContentCustomScrollView() {
     return CustomScrollView(
       slivers: <Widget>[
@@ -412,15 +439,49 @@ class _HomeState extends State<Home> {
             ],
           ),
         ),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            [
+              Container(
+                height: 100,
+                width: double.infinity,
+                color: Colors.white,
+                child: Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(
+                        //                   <--- left side
+                        color: Colors.redAccent,
+                        width: 3.0,
+                      )),
+                    ),
+                    child: Text(
+                      "سرویس های ما",
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontFamily: "IRANSans",
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
         SliverGrid(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: rowCount,
-              childAspectRatio: width > 700 ? 3 / 3 : 3 / 2.5,
+              childAspectRatio: width < 700
+                  ? 3 / 2.2
+                  : width < 800 ? 3 : width < 1100 ? 3 / 4 : 3 / 2.5,
               mainAxisSpacing: 0.0,
               crossAxisSpacing: 0.0),
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
               return Container(
+                padding: EdgeInsets.all(0),
                 color: Colors.white,
                 margin: EdgeInsets.all(0),
                 child: singleServices(
@@ -430,11 +491,7 @@ class _HomeState extends State<Home> {
                 ),
               );
             },
-            childCount: width < 500
-                ? serviceTitles.length - 1
-                : width > 1100
-                    ? serviceTitles.length - 1
-                    : serviceTitles.length,
+            childCount: serviceTitles.length,
           ),
         ),
         SliverList(
@@ -444,7 +501,7 @@ class _HomeState extends State<Home> {
                 child: Container(
                   height: height - heightContainer,
                   width: double.infinity,
-                  color: Colors.green,
+                  color: Colors.white,
                 ),
               ),
               Center(
