@@ -15,6 +15,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final projectsKey = new GlobalKey();
+
   int _current = 0;
   var top = 0.0;
   var topFakeBanner = 0.0;
@@ -269,24 +271,30 @@ class _HomeState extends State<Home> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 20),
-                  child: CustomCursor(
-                    cursorStyle: CustomCursor.pointer,
-                    child: MouseRegion(
-                      onHover: (event) {
-                        setState(() {
-                          productsTextColor = Colors.redAccent;
-                        });
-                      },
-                      onExit: (event) {
-                        setState(() {
-                          productsTextColor = Colors.white;
-                        });
-                      },
-                      child: Text(
-                        "نمونه‌کارها",
-                        style: TextStyle(
-                          color: productsTextColor,
-                          fontFamily: "IRANSans",
+                  child: GestureDetector(
+                    onTap: () => Scrollable.ensureVisible(
+                      projectsKey.currentContext,
+                      duration: Duration(milliseconds: 500),
+                    ),
+                    child: CustomCursor(
+                      cursorStyle: CustomCursor.pointer,
+                      child: MouseRegion(
+                        onHover: (event) {
+                          setState(() {
+                            productsTextColor = Colors.redAccent;
+                          });
+                        },
+                        onExit: (event) {
+                          setState(() {
+                            productsTextColor = Colors.white;
+                          });
+                        },
+                        child: Text(
+                          "نمونه‌کارها",
+                          style: TextStyle(
+                            color: productsTextColor,
+                            fontFamily: "IRANSans",
+                          ),
                         ),
                       ),
                     ),
@@ -373,7 +381,7 @@ class _HomeState extends State<Home> {
       left: 0,
       right: 0,
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxHeight: 3000),
+        constraints: BoxConstraints(maxHeight: 10000),
         child: Container(
           color: Colors.white,
         ),
@@ -515,27 +523,32 @@ class _HomeState extends State<Home> {
           delegate: SliverChildListDelegate(
             [
               Container(
-                height: 100,
+                height: 160,
                 width: double.infinity,
                 color: Colors.white,
                 child: Center(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(
-                        //                   <--- left side
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 60,
+                      ),
+                      Text(
+                        "سرویس های ما",
+                        style: TextStyle(
+                            fontSize: 30,
+                            fontFamily: "IRANSans",
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        height: 1,
+                        width: 60,
                         color: Colors.redAccent,
-                        width: 3.0,
-                      )),
-                    ),
-                    child: Text(
-                      "سرویس های ما",
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontFamily: "IRANSans",
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    ),
+                      )
+                    ],
                   ),
                 ),
               ),
@@ -546,8 +559,8 @@ class _HomeState extends State<Home> {
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: rowCount,
               childAspectRatio: width < 700
-                  ? 3 / 2.2
-                  : width < 800 ? 3 : width < 1100 ? 3 / 4 : 3 / 2.5,
+                  ? 1.2
+                  : width < 800 ? 2.8 : width < 1100 ? 3 / 4 : 3 / 2.5,
               mainAxisSpacing: 0.0,
               crossAxisSpacing: 0.0),
           delegate: SliverChildBuilderDelegate(
@@ -569,11 +582,123 @@ class _HomeState extends State<Home> {
         SliverList(
           delegate: SliverChildListDelegate(
             [
+              Container(
+                width: double.infinity,
+                color: Colors.white,
+                margin: EdgeInsets.only(
+                  bottom: 50,
+                ),
+                child: Center(
+                  child: GestureDetector(
+                    onTap: () {},
+                    child: CustomCursor(
+                      cursorStyle: CustomCursor.pointer,
+                      child: MouseRegion(
+                        onHover: (event) {
+                          setState(() {
+                            scrollTextColor = Colors.redAccent;
+                          });
+                        },
+                        onExit: (event) {
+                          setState(() {
+                            scrollTextColor = Colors.white;
+                          });
+                        },
+                        child: scrollTextColor == Colors.redAccent
+                            ? Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10),
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  borderRadius: BorderRadius.circular(
+                                    5.0,
+                                  ),
+                                  border: Border.all(
+                                    color: Colors.redAccent,
+                                  ),
+                                ),
+                                child: Text(
+                                  "مشاهده کامل سرویس ها",
+                                  style: TextStyle(
+                                    color: scrollTextColor,
+                                    fontFamily: "IRANSans",
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10),
+                                decoration: BoxDecoration(
+                                  color: Colors.redAccent,
+                                  borderRadius: BorderRadius.circular(
+                                    5.0,
+                                  ),
+                                  border: Border.all(
+                                    color: Colors.redAccent,
+                                  ),
+                                ),
+                                child: Text(
+                                  "مشاهده کامل سرویس ها",
+                                  style: TextStyle(
+                                    color: scrollTextColor,
+                                    fontFamily: "IRANSans",
+                                  ),
+                                ),
+                              ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SliverList(
+          key: projectsKey,
+          delegate: SliverChildListDelegate(
+            [
+              Container(
+                height: 160,
+                width: double.infinity,
+                color: Color(0xFFededed),
+                child: Center(
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 60,
+                      ),
+                      Text(
+                        "محیط کاری ما چگونه است؟",
+                        style: TextStyle(
+                            fontSize: width > 700 ? 30 : 20,
+                            fontFamily: "IRANSans",
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        height: 1,
+                        width: 60,
+                        color: Colors.redAccent,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        owerWorkPlace(),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            [
               Center(
                 child: Container(
                   height: height - heightContainer,
                   width: double.infinity,
-                  color: Colors.white,
+                  color: Colors.blueGrey,
                 ),
               ),
               Center(
@@ -615,8 +740,8 @@ class _HomeState extends State<Home> {
           title.trim() == ""
               ? Container()
               : Container(
-                  width: 56,
-                  height: 56,
+                  width: 66,
+                  height: 66,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(
                       100.0,
@@ -659,6 +784,129 @@ class _HomeState extends State<Home> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget owerWorkPlace() {
+    return SliverGrid(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: width < 780 ? 1 : 2,
+        childAspectRatio: (width > 500 && width < 780) ? 2 : 1.3,
+      ),
+      delegate: SliverChildListDelegate(
+        [
+          Container(
+            color: Color(0xFFededed),
+            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+            child: Image.network(
+              "http://vasfa.ir/wp-content/uploads/2020/03/priscilla-du-preez-XkKCui44iM0-unsplash-e1571049095841.jpg",
+              fit: BoxFit.fitWidth,
+            ),
+          ),
+          Container(
+            color: Color(0xFFededed),
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            child: CustomScrollView(
+              slivers: <Widget>[
+                SliverGrid(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 1,
+                    childAspectRatio: (width > 500 && width < 780) ? 6.5 : 4,
+                  ),
+                  delegate: SliverChildListDelegate([
+                    Center(
+                      child: Container(
+                        child: Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: ListTile(
+                            leading: icons(Icons.settings, 56.0, 56.0),
+                            title: contents("رشد و توسعه فردی", true),
+                            subtitle: contentsJustify(
+                                "چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد.",
+                                true),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Container(
+                        child: Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: ListTile(
+                            leading: icons(Icons.public, 56.0, 56.0),
+                            title: contents("اینترنت نامحدود", true),
+                            subtitle: contentsJustify(
+                                "چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد.",
+                                true),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Container(
+                        child: Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: ListTile(
+                            leading: icons(Icons.local_cafe, 56.0, 56.0),
+                            title: contents("کافی‌شاپ رایگان", false),
+                            subtitle: contentsJustify(
+                                "چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد.",
+                                true),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget icons(IconData icon, double width, double height) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(
+          100.0,
+        ),
+        border: Border.all(
+          color: Colors.redAccent,
+        ),
+      ),
+      child: Icon(
+        icon,
+        color: Colors.redAccent,
+      ),
+    );
+  }
+
+  Widget contents(String text, bool justify) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: width < 700 ? 12 : width < 1100 ? 13 : 14,
+        fontFamily: "IRANSans",
+        fontWeight: FontWeight.bold,
+        color: Colors.black45,
+      ),
+    );
+  }
+
+  Widget contentsJustify(String text, bool justify) {
+    return Text(
+      text,
+      textAlign: TextAlign.justify,
+      style: TextStyle(
+        fontSize: width < 700 ? 11 : width < 1100 ? 13 : 14,
+        fontFamily: "IRANSans",
+        fontWeight: FontWeight.normal,
+        color: Colors.black45,
       ),
     );
   }

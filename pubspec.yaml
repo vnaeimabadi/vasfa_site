@@ -20,8 +20,8 @@ dependencies:
   flutter:
     sdk: flutter
   carousel_slider: ^1.4.1
-#  banner_view:
-#    git: https://github.com/yangxiaoweihn/BannerView.git
+  #  banner_view:
+  #    git: https://github.com/yangxiaoweihn/BannerView.git
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
