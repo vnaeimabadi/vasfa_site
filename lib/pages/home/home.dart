@@ -35,6 +35,7 @@ class _HomeState extends State<Home> {
   Color aboutUsTextColor = Colors.white;
   Color newsTextColor = Colors.white;
   Color contactUsTextColor = Colors.white;
+  Color scrollTextColor = Colors.white;
   ScrollController _scrollController;
   int rowCount = 3;
 
@@ -198,7 +199,7 @@ class _HomeState extends State<Home> {
                     child: MouseRegion(
                       onHover: (event) {
                         setState(() {
-                          contactUsTextColor = Colors.orange;
+                          contactUsTextColor = Colors.redAccent;
                         });
                       },
                       onExit: (event) {
@@ -223,7 +224,7 @@ class _HomeState extends State<Home> {
                     child: MouseRegion(
                       onHover: (event) {
                         setState(() {
-                          newsTextColor = Colors.orange;
+                          newsTextColor = Colors.redAccent;
                         });
                       },
                       onExit: (event) {
@@ -248,7 +249,7 @@ class _HomeState extends State<Home> {
                     child: MouseRegion(
                       onHover: (event) {
                         setState(() {
-                          aboutUsTextColor = Colors.orange;
+                          aboutUsTextColor = Colors.redAccent;
                         });
                       },
                       onExit: (event) {
@@ -273,7 +274,7 @@ class _HomeState extends State<Home> {
                     child: MouseRegion(
                       onHover: (event) {
                         setState(() {
-                          productsTextColor = Colors.orange;
+                          productsTextColor = Colors.redAccent;
                         });
                       },
                       onExit: (event) {
@@ -298,7 +299,7 @@ class _HomeState extends State<Home> {
                     child: MouseRegion(
                       onHover: (event) {
                         setState(() {
-                          teamTextColor = Colors.orange;
+                          teamTextColor = Colors.redAccent;
                         });
                       },
                       onExit: (event) {
@@ -321,7 +322,7 @@ class _HomeState extends State<Home> {
                   child: MouseRegion(
                     onHover: (event) {
                       setState(() {
-                        homeTextColor = Colors.orange;
+                        homeTextColor = Colors.redAccent;
                       });
                     },
                     onExit: (event) {
@@ -411,8 +412,79 @@ class _HomeState extends State<Home> {
                                         color: Colors.white),
                                   ),
                                 ),
-                                width < 100
-                                    ? Container()
+                                SizedBox(
+                                  height: 50,
+                                ),
+                                width > 100
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          scrollTo();
+                                        },
+                                        child: CustomCursor(
+                                          cursorStyle: CustomCursor.pointer,
+                                          child: MouseRegion(
+                                            onHover: (event) {
+                                              setState(() {
+                                                scrollTextColor =
+                                                    Colors.redAccent;
+                                              });
+                                            },
+                                            onExit: (event) {
+                                              setState(() {
+                                                scrollTextColor = Colors.white;
+                                              });
+                                            },
+                                            child: scrollTextColor ==
+                                                    Colors.redAccent
+                                                ? Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 20,
+                                                            vertical: 10),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.transparent,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                        5.0,
+                                                      ),
+                                                      border: Border.all(
+                                                        color: Colors.redAccent,
+                                                      ),
+                                                    ),
+                                                    child: Text(
+                                                      "کلیک کنید",
+                                                      style: TextStyle(
+                                                        color: scrollTextColor,
+                                                        fontFamily: "IRANSans",
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 20,
+                                                            vertical: 10),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.redAccent,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                        5.0,
+                                                      ),
+                                                      border: Border.all(
+                                                        color: Colors.redAccent,
+                                                      ),
+                                                    ),
+                                                    child: Text(
+                                                      "کلیک کنید",
+                                                      style: TextStyle(
+                                                        color: scrollTextColor,
+                                                        fontFamily: "IRANSans",
+                                                      ),
+                                                    ),
+                                                  ),
+                                          ),
+                                        ),
+                                      )
                                     : CustomCursor(
                                         cursorStyle: CustomCursor.pointer,
                                         child: RaisedButton(
